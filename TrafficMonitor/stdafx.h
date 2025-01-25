@@ -84,19 +84,22 @@ using std::ofstream;
 #define TASKBAR_TIMER 1236
 #define CONNECTION_DETAIL_TIMER 1237
 #define MONITOR_TIMER 1238
+#define DELETE_NOTIFY_ICON_TIMER 1239   //删除通知区图标的定时器
 
 #define MAX_INSERT_TO_TASKBAR_CNT 200     //尝试嵌入任务栏的最大次数
 #define WARN_INSERT_TO_TASKBAR_CNT 20     //尝试嵌入任务栏的警告次数
 
 #define APP_NAME _T("TrafficMonitor")
 #define APP_CLASS_NAME _T("TrafficMonitor_r7XZaS4p") //程序主窗口的类名
-#define VERSION L"1.84.1"
+#define VERSION L"1.85"
 
 #define MAX_NOTIFY_ICON 6       //可选的通知区图标数量
 
 //背景图片的文件名
 #define BACKGROUND_IMAGE_S L"\\background.bmp"
 #define BACKGROUND_IMAGE_L L"\\background_l.bmp"
+#define BACKGROUND_IMAGE_S_PNG L"background.png"
+#define BACKGROUND_IMAGE_L_PNG L"background_l.png"
 #define BACKGROUND_MASK_S L"\\background_mask.bmp"
 #define BACKGROUND_MASK_L L"\\background_mask_l.bmp"
 

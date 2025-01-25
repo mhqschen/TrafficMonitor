@@ -192,6 +192,11 @@ struct MainConfigData
     string m_connection_name;      //当前选择网络的名称
 
     wstring m_skin_name;            //选择的皮肤的名称
+
+    bool skin_auto_adapt{ false };  //根据深色/浅色模式自动切换皮肤
+    wstring skin_name_light_mode;   //浅色模式下的皮肤名称
+    wstring skin_name_dark_mode;    //深色模式下的皮肤名称
+
     int m_dft_notify_icon = 0;      //默认的通知图标(用于区分win10的深色和浅色模式)
     int m_notify_icon_selected{};   //要显示的通知区图标
     bool m_notify_icon_auto_adapt{ false }; //通知区图标是否自动适应Win10深浅色模式
@@ -202,7 +207,6 @@ struct MainConfigData
     bool m_sunday_first{ true };            //是否将周日作为一周的第一天
     StringSet plugin_disabled;      //已禁用的插件
 
-    int taskbar_left_space_win11{};         //Windows11下，任务栏窗口显示在左侧时的边距
 };
 
 //内存显示方式
@@ -291,12 +295,17 @@ struct TaskBarSettingData : public PublicSettingData
     bool tbar_wnd_snap{ false };     	//如果为true，则在Win11中任务栏窗口贴靠中间任务栏，否则靠近边缘
     bool cm_graph_type{ false };        //如果为false，默认原样式，柱状图显示占用率，如为true，滚动显示占用率
     bool show_graph_dashed_box{ true }; //显示占用图虚线框
+
     int item_space{};                   //项目间距
-    int window_offset_top{};            //任务栏窗口顶部边距
     int vertical_margin{};              //项目垂直间距
+    int window_offset_top{};            //任务栏窗口顶部边距
+    int window_offset_left{};           //任务栏窗口左侧边距
     void ValidItemSpace();
-    void ValidWindowOffsetTop();
     void ValidVerticalMargin();
+    void ValidWindowOffsetTop();
+    void ValidWindowOffsetLeft();
+    bool avoid_overlap_with_widgets{ false };   //避免与右侧小组件重叠
+    int taskbar_left_space_win11{};         //Windows11下，任务栏小工具的宽度
 
     bool show_netspeed_figure{ false };     //是否显示网速占用图
     int netspeed_figure_max_value;          //网速占用图的最大值
@@ -305,6 +314,9 @@ struct TaskBarSettingData : public PublicSettingData
 
     bool disable_d2d{ false };//是否禁用d2d绘图
     DWORD update_layered_window_error_code{0}; // 使用D2D1渲染时，UpdateLayeredWindowIndirect失败的错误代码，会在关闭任务栏窗口时被重置为0
+    bool enable_colorful_emoji{ true };       //是否显示彩色emoji
+
+    bool is_windows_web_experience_detected{ false }; //是否检测到Windows Web Experience小组件安装信息
 };
 
 //选项设置中“常规设置”的数据
@@ -337,7 +349,15 @@ struct GeneralSettingData
     Language language;
 
     bool show_all_interface{ true };
-    bool m_get_cpu_usage_by_cpu_times{ true };  //获取CPU利用率的方式，如果为true则是使用GetSystemTimes，否则使用Pdh（性能计数器）
+
+    //CPU利用率获取方式
+    enum CpuUsageAcquireMethod
+    {
+        CA_CPU_TIME,    //使用时间
+        CA_PDH,         //性能计数器
+        CA_HARDWARE_MONITOR     //来自硬件监控
+    };
+    CpuUsageAcquireMethod cpu_usage_acquire_method{};  //获取CPU利用率的方式
 
     bool portable_mode{ false };        //便携模式，如果为true，则程序所有数据都保存到exe所在目录下，否则保存到Appdata\Romaing目录下
     int monitor_time_span{ 1000 };    //监控的时间间隔

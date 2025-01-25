@@ -67,18 +67,20 @@ const std::map<CommonDisplayItem, wstring>& DispStrings::GetAllItems() const
 
 void DispStrings::operator=(const DispStrings& disp_str)
 {
-    map_str = disp_str.map_str;
+    std::map<CommonDisplayItem, wstring> tmp = disp_str.map_str;
     //如果赋值的字符串是定义的无效字符串，则不赋值
-    for (auto& iter = map_str.begin(); iter != map_str.end(); ++iter)
+    for (auto iter = tmp.begin(); iter != tmp.end(); ++iter)
     {
         if (iter->second == NONE_STR)
-            iter->second.clear();
+            iter->second = map_str[iter->first];
     }
+
+    map_str = tmp;
 }
 
 bool DispStrings::IsInvalid() const
 {
-    for (auto& iter = map_str.begin(); iter != map_str.end(); ++iter)
+    for (auto iter = map_str.begin(); iter != map_str.end(); ++iter)
     {
         if (iter->second == NONE_STR)
             return true;
@@ -196,6 +198,14 @@ void TaskBarSettingData::ValidItemSpace()
         item_space = 32;
 }
 
+void TaskBarSettingData::ValidVerticalMargin()
+{
+    if (vertical_margin < -10)
+        vertical_margin = -10;
+    if (vertical_margin > 10)
+        vertical_margin = 10;
+}
+
 void TaskBarSettingData::ValidWindowOffsetTop()
 {
     if (window_offset_top < -5)
@@ -204,12 +214,12 @@ void TaskBarSettingData::ValidWindowOffsetTop()
         window_offset_top = 20;
 }
 
-void TaskBarSettingData::ValidVerticalMargin()
+void TaskBarSettingData::ValidWindowOffsetLeft()
 {
-    if (vertical_margin < -10)
-        vertical_margin = -10;
-    if (vertical_margin > 10)
-        vertical_margin = 10;
+    if (window_offset_left < -800)
+        window_offset_top = -800;
+    if (window_offset_top > 800)
+        window_offset_top = 800;
 }
 
 unsigned __int64 TaskBarSettingData::GetNetspeedFigureMaxValueInBytes() const
